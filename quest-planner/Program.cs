@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define TEST_ALL_QUESTS
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +15,18 @@ namespace quest_planner
       QuestLister lister = new QuestLister(@"https://runescape.wiki/w/List_of_quests");
       lister.ListAvailableQuests();
       int quest_count = lister.GetQuestCount();
+
+#if TEST_ALL_QUESTS
+      Console.WriteLine("===============[Test]===============");
+
+      for (int i = 0; i < quest_count; ++i)
+      {
+        Console.WriteLine("\n> Showing requirements for '{0}', This might take a short time..\n", lister.GetQuestName(i));
+        Quest chosen_quest = new Quest(lister.GetFullQuestURL(i));
+      }
+
+      Console.WriteLine("===============[/Test]===============");
+#endif
 
       while (true)
       {

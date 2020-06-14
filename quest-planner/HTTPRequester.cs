@@ -50,7 +50,7 @@ namespace quest_planner
     public static HTMLResponse GetURLBlocking(string url)
     {
       Task<HTMLResponse> hr = GetURL(url);
-      hr.Wait();
+      hr.Wait(15000);
 
       return hr.Result;
     }

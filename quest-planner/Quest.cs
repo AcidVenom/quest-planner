@@ -17,7 +17,7 @@ namespace quest_planner
 
     public delegate void ListDelegate(string s);
 
-    public Quest(string url)
+    public Quest(string url, List<string> already_parsed = null)
     {
       name = "";
       skill_requirements = new SkillRequirements();
@@ -25,7 +25,17 @@ namespace quest_planner
       required_quest_points = 0;
       misc_requirements = new List<string>();
 
-      RetrieveData(url);
+      if (already_parsed == null)
+      {
+        already_parsed = new List<string>();
+      }
+
+      if (already_parsed.Contains(url))
+      {
+        return;
+      }
+
+      RetrieveData(url, already_parsed);
       Merge();
     }
 
@@ -39,8 +49,9 @@ namespace quest_planner
       return name;
     }
 
-    protected void RetrieveData(string url)
+    protected void RetrieveData(string url, List<string> already_parsed)
     {
+      already_parsed.Add(url);
       HTTPRequester.HTMLResponse hr = HTTPRequester.GetURLBlocking(url);
 
       if (hr.Succeeded == true)
@@ -50,10 +61,14 @@ namespace quest_planner
           return;
         }
 
-        if (Parse(hr.Document) == false)
+        if (Parse(hr.Document, already_parsed) == false)
         {
           Console.WriteLine("[Warning] Could not fully resolve parsing of quest '{0}'", url);
         }
+      }
+      else
+      {
+        Console.WriteLine("We were not able to retrieve all data, this might be due to a timeout (15 seconds), try again later");
       }
     }
 
@@ -70,14 +85,19 @@ namespace quest_planner
       return null;
     }
 
-    protected bool Parse(HtmlDocument doc)
+    protected bool Parse(HtmlDocument doc, List<string> already_parsed)
     {
       var title = doc.DocumentNode.SelectSingleNode("//h1");
       name = title.InnerText;
 
       HtmlNode requirements_table = FindQuestRequirementsTable(doc);
 
-      if (ParseRequiredQuests(requirements_table) == false)
+      if (requirements_table == null)
+      {
+        return true;
+      }
+
+      if (ParseRequiredQuests(requirements_table, already_parsed) == false)
       {
         return false;
       }
@@ -90,7 +110,7 @@ namespace quest_planner
       return true;
     }
 
-    protected bool ParseRequiredQuests(HtmlNode requirements_table)
+    protected bool ParseRequiredQuests(HtmlNode requirements_table, List<string> already_parsed)
     {
       HtmlNode quest_reqs = requirements_table.QuerySelector("table.questreq");
       if (quest_reqs == null)
@@ -123,7 +143,7 @@ namespace quest_planner
       foreach (KeyValuePair<string, HtmlNode> pair in quest_urls)
       {
         string url = pair.Value.GetAttributeValue("href", "/");
-        Quest new_quest = new Quest(@"https://runescape.wiki" + url);
+        Quest new_quest = new Quest(@"https://runescape.wiki" + url, already_parsed);
         if (new_quest.IsValid())
         {
           required_quests.Add(new_quest);
