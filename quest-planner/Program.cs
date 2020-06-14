@@ -1,4 +1,4 @@
-﻿//#define TEST_ALL_QUESTS
+﻿#define TEST_ALL_QUESTS
 
 using System;
 using System.Collections.Generic;

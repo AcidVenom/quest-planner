@@ -343,9 +343,14 @@ namespace quest_planner
     
     public bool HasQuestPointRequirements()
     {
+      if (required_quest_points > 0)
+      {
+        return true;
+      }
+
       foreach (Quest q in required_quests)
       {
-        if (q.required_quest_points > 0)
+        if (q.HasQuestPointRequirements() == true)
         {
           return true;
         }
@@ -357,11 +362,18 @@ namespace quest_planner
     public Dictionary<string, int> GetQuestPointRequirements()
     {
       Dictionary<string, int> to_return = new Dictionary<string, int>();
+
+      if (required_quest_points > 0)
+      {
+        to_return.Add(name, required_quest_points);
+      }
+
       foreach (Quest q in required_quests)
       {
-        if (q.required_quest_points > 0)
+        Dictionary<string, int> reqs = q.GetQuestPointRequirements();
+        foreach (KeyValuePair<string, int> req in reqs)
         {
-          to_return.Add(q.name, q.required_quest_points);
+          to_return.Add(req.Key, req.Value);
         }
       }
 
