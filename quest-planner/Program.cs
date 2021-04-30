@@ -1,4 +1,4 @@
-﻿#define TEST_ALL_QUESTS
+﻿//#define TEST_ALL_QUESTS
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,31 @@ namespace quest_planner
       QuestLister lister = new QuestLister(@"https://runescape.wiki/w/List_of_quests");
       lister.ListAvailableQuests();
       int quest_count = lister.GetQuestCount();
+
+      Console.WriteLine("==============================================\n");
+
+      Random r = new Random();
+
+      Console.WriteLine("Would you like random quests? Press 'R'. If using the quest planner as usual; press any other key\n");
+      if (Console.ReadKey(true).Key == ConsoleKey.R)
+      {
+        Console.WriteLine("\n--------------------------------------------------------------------------------------------------");
+        Console.WriteLine("\n  Randomizer mode (Press any key, except 'Q' to generate a new random quest. Type 'Q' to exit)\n");
+        Console.WriteLine("--------------------------------------------------------------------------------------------------\n");
+        while (Console.ReadKey(true).Key != ConsoleKey.Q)
+        {
+          double random_number = r.NextDouble();
+          int random_index = (int)Math.Floor(random_number * (double)quest_count);
+
+          Console.WriteLine("Random quest: {0}", lister.GetQuestName(random_index));
+        }
+
+        return 0;
+      }
+
+      Console.WriteLine("\n--------------------------------------------------------------------------------------------------");
+      Console.WriteLine("\n  Planner mode\n");
+      Console.WriteLine("--------------------------------------------------------------------------------------------------\n");
 
 #if TEST_ALL_QUESTS
       Console.WriteLine("===============[Test]===============");
