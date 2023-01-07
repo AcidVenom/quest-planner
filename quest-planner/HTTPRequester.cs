@@ -22,11 +22,13 @@ namespace quest_planner
     {
       try
       {
+        http.DefaultRequestHeaders.Add("User-Agent", "QuestPlanner/0.1 (github.com/AcidVenom)");
+
         HttpResponseMessage response = await http.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
         string contents = await response.Content.ReadAsStringAsync();
-        
+
         HTMLResponse hr;
         hr.Document = new HtmlDocument();
         hr.Document.LoadHtml(contents);

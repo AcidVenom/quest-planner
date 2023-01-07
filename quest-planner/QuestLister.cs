@@ -49,7 +49,7 @@ namespace quest_planner
 
         // Well.. I apparently don't really know how this works, but whatever
         int child_index = quest.ParentNode.ParentNode.ChildNodes.IndexOf(quest.ParentNode);
-        if (quest.ParentNode.ParentNode.ParentNode == table && child_index == 1)
+        if (quest.ParentNode.ParentNode.ParentNode == table && child_index == 0)
         {
           QuestListing listing;
           listing.name = quest.InnerText;
@@ -80,7 +80,7 @@ namespace quest_planner
 
     public string GetQuestName(int index)
     {
-      return available_quests[index].name;
+      return index >= available_quests.Count ? "undefined" : available_quests[index].name;
     }
 
     public string GetFullQuestURL(int index)

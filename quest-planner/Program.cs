@@ -12,7 +12,7 @@ namespace quest_planner
   {
     static int Main(string[] args)
     {
-      QuestLister lister = new QuestLister(@"https://runescape.wiki/w/List_of_quests");
+      QuestLister lister = new QuestLister(@"https://www.runescape.wiki/w/List_of_quests");
       lister.ListAvailableQuests();
       int quest_count = lister.GetQuestCount();
 
