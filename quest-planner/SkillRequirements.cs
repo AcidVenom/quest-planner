@@ -51,6 +51,7 @@ namespace quest_planner
       kFarming,
       kSummoning,
       kInvention,
+      kNecromancy,
       kCount
     }
 
@@ -173,6 +174,10 @@ namespace quest_planner
       else if (lower == "invention")
       {
         return Skill.kInvention;
+      }
+      else if (lower == "necromancy")
+      {
+        return Skill.kNecromancy;
       }
 
       return Skill.kCount;
